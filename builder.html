@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сборщик данных для Дашборда</title>
+    <!-- Подключаем локальную библиотеку для чтения Excel -->
+    <script src="xlsx.full.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 50px; background: #f4f6f8; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #0055aa; text-align: center; }
+        .file-group { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+        label { display: block; font-weight: bold; margin-bottom: 10px; }
+        input[type="file"] { display: block; width: 100%; padding: 10px; background: white; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 15px; background: #4caf50; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: background 0.2s; }
+        button:hover { background: #45a049; }
+        .status { margin-top: 20px; text-align: center; font-weight: bold; color: #0055aa; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Сборщик данных</h1>
+    <p style="text-align: center; color: #666;">Выберите свежие выгрузки из 1С и СЭД, чтобы обновить дашборд.</p>
+
+    <div class="file-group">
+        <label>1. Выгрузка из 1С (Excel):</label>
+        <input type="file" id="file-1c" accept=".xlsx, .xls">
+    </div>
+
+    <div class="file-group">
+        <label>2. Выгрузка из СЭД (Excel):</label>
+        <input type="file" id="file-sed" accept=".xlsx, .xls">
+    </div>
+
+    <button onclick="generateData()">Сгенерировать файл данных</button>
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+    function readExcel(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array', cellDates: true});
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                resolve(json);
+            };
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    async function generateData() {
+        const file1cInput = document.getElementById('file-1c');
+        const fileSedInput = document.getElementById('file-sed');
+        const statusDiv = document.getElementById('status');
+
+        if (!file1cInput.files.length && !fileSedInput.files.length) {
+            alert('Выберите хотя бы один файл!');
+            return;
+        }
+
+        statusDiv.innerText = "Чтение файлов...";
+        
+        try {
+            let data1c = [];
+            let dataSed = [];
+
+            if (file1cInput.files.length) {
+                data1c = await readExcel(file1cInput.files[0]);
+            }
+            if (fileSedInput.files.length) {
+                dataSed = await readExcel(fileSedInput.files[0]);
+            }
+
+            statusDiv.innerText = "Формирование файла данных...";
+
+            // Создаем строку с JS-кодом, где данные зашиты напрямую
+            const jsContent = `
+// Этот файл сгенерирован автоматически. Не редактируйте его вручную.
+window.bakedData1C = ${JSON.stringify(data1c)};
+window.bakedDataSED = ${JSON.stringify(dataSed)};
+            `;
+
+            // Скачиваем как data.js
+            const blob = new Blob([jsContent], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            statusDiv.innerText = "Готово! Файл data.js скачан.";
+            
+        } catch (error) {
+            console.error(error);
+            statusDiv.innerText = "Ошибка при чтении файлов.";
+            alert('Ошибка: ' + error.message);
+        }
+    }
+</script>
+</body>
+</html>

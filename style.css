@@ -1,0 +1,2824 @@
+/* --- ЦВЕТА КОМПАНИИ (измените на свои) --- */
+:root {
+    /* --- БРЕНДОВЫЕ ЦВЕТА --- */
+    --brand-dark-orange: #D94416; 
+    --brand-orange: #E56B1F;      
+    --brand-yellow: #FDB71D;      
+    
+    /* --- ЦВЕТА ИНТЕРФЕЙСА (Мягкий темный режим) --- */
+    --primary-color: var(--brand-orange); 
+    
+    /* Фон страницы: глубокий, но не черный серый */
+    --secondary-color: #B8BFC7;           
+    
+    /* Карточки: приятный светло-серый (не режет глаза) */
+    --card-bg: #E9ECEF;                   
+    
+    /* Текст: темный графит для отличной читаемости на серых карточках */
+    --text-main: #2C3E50;                 
+    --text-muted: #5A6C7D;                
+    
+    --border-radius: 12px;                
+    /* Границы: чуть темнее фона карточек */
+    --border-color: #CED4DA;              
+    
+    /* --- ЦВЕТА СТАТУСОВ (СЭД) --- */
+    --status-success: #2E7D32;            
+    --status-danger: #D32F2F;             
+    --status-warning: #0288D1;            
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+}
+
+/* Шапка */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    padding: 15px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-area h1 {
+    font-size: 20px;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+/* Блок KPI */
+.kpi-container {
+    display: grid;
+    /* Первая колонка (1С) в 2 раза шире остальных, остальные три по 1fr */
+    grid-template-columns: 2fr 1fr 1fr 1fr; 
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-top: 4px solid var(--primary-color);
+    text-align: center;
+}
+
+.kpi-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #777;
+    font-weight: normal;
+}
+
+.kpi-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Сетка сотрудников */
+.employee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.employee-card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.employee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.employee-card h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.employee-card p {
+    margin: 0;
+    font-size: 12px;
+    color: #777;
+}
+
+/* Графики */
+.charts-section {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--danger-color);
+}
+
+/* --- Стили для модального окна (ЦЕНТРИРОВАНИЕ) --- */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    backdrop-filter: blur(3px); 
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 900px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+    animation: slideDown 0.3s ease-out;
+    
+    /* ДОБАВИТЬ ЭТИ ДВЕ СТРОЧКИ: */
+    max-height: 90vh; 
+    overflow-y: auto; 
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--danger-color);
+}
+
+.modal-chart-container {
+    position: relative;
+    height: 350px;
+    width: 100%;
+}
+
+/* Стили для кнопок фильтра */
+.filter-btn {
+    padding: 6px 15px;
+    border: 1px solid #ccc;
+    background: transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+.filter-btn:hover { background: #f0f0f0; }
+.filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* --- Стили для новой шапки --- */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    padding: 15px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    min-height: 80px;
+}
+
+.header-left, .header-center, .header-right {
+    flex: 1; /* Каждая колонка занимает равное пространство */
+}
+
+.header-left {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.company-logo {
+    max-height: 50px; /* Логотип не будет выше 50 пикселей */
+    max-width: 200px;
+    object-fit: contain; /* Сохраняет пропорции картинки */
+}
+
+.header-center {
+    text-align: center;
+}
+
+.header-center h1 {
+    margin: 0;
+    font-size: 24px; 
+    color: var(--brand-orange); 
+    font-weight: 900; 
+    letter-spacing: 0.5px; 
+    text-transform: uppercase; 
+}
+
+/* Светлая окантовка/свечение для темной темы */
+body.dark-theme .header-center h1 {
+    color: var(--brand-orange);
+}
+
+/* Правая часть с плашками */
+/* Правая часть шапки - легкий, ненавязчивый дизайн */
+
+.header-right span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.header-right strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* Иконки для текста */
+.update-info::before { content: '🔄'; font-size: 14px; }
+.current-time::before { content: '🕒'; font-size: 14px; }
+
+/* Выделяем само время моноширинным шрифтом для красоты */
+#live-clock {
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: var(--brand-orange);
+    font-weight: bold;
+}
+/* ==========================================
+   ПАНЕЛЬ ИНСТРУМЕНТОВ (PDF и Тема)
+   ========================================== */
+.toolbar {
+    display: flex;
+    flex-direction: column; /* Выстраиваем ряды друг под другом */
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    align-items: flex-end; /* Прижимаем всё к правому краю */
+}
+
+.toolbar-group {
+    display: flex;
+    gap: 10px;
+}
+
+.tool-btn {
+    background: var(--card-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.tool-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* ==========================================
+   ФУТЕР
+   ========================================== */
+.dashboard-footer {
+    background: #2C3E50; /* Темный фон для контраста */
+    color: #ecf0f1;
+    padding: 30px 40px;
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.footer-col {
+    flex: 1;
+}
+
+.footer-col h4 {
+    color: var(--brand-yellow);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-col p {
+    margin: 5px 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.footer-btn {
+    background: transparent;
+    color: #ecf0f1;
+    border: 1px solid #ecf0f1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    pointer-events: auto !important;
+}
+
+.footer-btn:hover {
+    background: var(--brand-yellow);
+    color: #2C3E50;
+    border-color: var(--brand-yellow);
+    font-weight: bold;
+    pointer-events: auto !important;
+}
+
+/* ==========================================
+   ТЕМНАЯ ТЕМА
+   ========================================== */
+body.dark-theme {
+    --secondary-color: #121212; 
+    --card-bg: #1E1E1E;         
+    --text-main: #E0E0E0;       
+    --text-muted: #9E9E9E;
+    --border-color: #333333;
+}
+
+/* Чтобы в темной теме карточки не сливались, добавим им легкую рамку */
+body.dark-theme .kpi-card, 
+body.dark-theme .filter-panel, 
+body.dark-theme #details-panel,
+body.dark-theme #sed-analytics-section > div {
+    border: 1px solid #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .kpi-value {
+    color: #fff !important; /* Цифры в KPI будут яркими */
+}
+
+body.dark-theme .dashboard-footer {
+    background: #0a0a0a;
+}
+
+body.dark-theme .filter-btn,
+body.dark-theme .tool-btn {
+    background: var(--card-bg);
+    color: var(--text-main);
+}
+
+body.dark-theme .filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+body.dark-theme #modal-sed-block {
+    background: #2a1f2a !important;
+    border-color: #3a2f3a !important;
+}
+
+body.dark-theme .header-right strong,
+body.dark-theme #live-clock {
+    color: var(--brand-yellow);
+}
+
+/* Чтобы при печати не выводились кнопки и футер */
+@media print {
+    .toolbar, .dashboard-footer, #dev-tools, .modal { display: none !important; }
+    body { background: white; }
+    .kpi-card, .filter-panel, #details-panel { box-shadow: none; border: 1px solid #ccc; }
+}
+/* Скрываем кнопки только на время генерации PDF */
+body.generating-pdf .toolbar,
+body.generating-pdf #dev-tools {
+    display: none !important;
+}
+/* ==========================================
+   СТИЛИ ДЛЯ ПЕЧАТИ И PDF (ЖЕСТКАЯ ФИКСАЦИЯ)
+   ========================================== */
+@media print {
+    /* Настройки страницы: альбомная ориентация, минимальные отступы */
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+
+    /* Принудительно делаем фон белым, убираем тени и анимации */
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Скрываем все интерактивные элементы */
+    .toolbar, .dashboard-footer, #dev-tools, .modal, .close-btn, 
+    .filter-panel, #expand-icon, #expand-sed-icon { 
+        display: none !important; 
+    }
+    
+    /* Переопределяем цвета переменных на светлые для печати */
+    :root, body.dark-theme {
+        --secondary-color: #ffffff !important;
+        --card-bg: #ffffff !important;
+        --text-main: #000000 !important;
+        --text-muted: #444444 !important;
+        --border-color: #cccccc !important;
+    }
+
+    /* Карточки KPI не должны разрываться */
+    .kpi-container {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+    }
+    .kpi-card {
+        flex: 1 !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid !important;
+    }
+
+    /* --- БЛОК 1С: Легенда и график друг под другом --- */
+    #details-panel {
+        display: block !important; /* Отключаем Flex */
+        page-break-inside: avoid !important;
+        border: 1px solid #ddd !important;
+        margin-bottom: 20px !important;
+    }
+    #details-panel > div {
+        display: flex !important;
+        flex-direction: column !important; /* Ставим в колонку */
+        align-items: center !important;
+    }
+    
+    /* Легенду делаем на всю ширину в 3 колонки, убираем скролл */
+    #custom-legend {
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important; /* Убираем прокрутку! */
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important; /* 3 колонки для экономии места */
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+        padding: 0 !important;
+    }
+    #custom-legend > div {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    
+    /* Фиксируем высоту контейнера графика 1С */
+    #details-panel > div > div:last-child {
+        height: 350px !important;
+        width: 100% !important;
+    }
+
+    /* --- БЛОК СЭД: Друг под другом --- */
+    #sed-analytics-section {
+        display: block !important; /* Отключаем Flex */
+        page-break-inside: avoid !important;
+    }
+    #sed-analytics-section > div {
+        width: 100% !important;
+        margin-bottom: 20px !important;
+        page-break-inside: avoid !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+    
+        /* Фиксируем высоту и ширину графиков СЭД при печати */
+    #sedGeneralChart {
+        height: 250px !important;
+        max-width: 500px !important;
+        margin: 0 auto !important; /* Центрируем по горизонтали */
+    }
+        #sedEmployeesChart {
+        height: 350px !important; /* Увеличили с 300 до 350 для печати */
+        max-width: 100% !important;
+    }
+
+    /* --- КАРТОЧКИ СОТРУДНИКОВ --- */
+    .employees-section {
+        page-break-before: always; /* Карточки начинаем с новой страницы */
+    }
+    .employee-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* По 2 карточки в ряд */
+        gap: 15px !important;
+    }
+    .employee-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+}
+/* --- Стили для календаря дней рождения --- */
+.calendar-day {
+    padding: 8px 0;
+    border-radius: 5px;
+    font-size: 14px;
+    color: var(--text-main);
+    cursor: default;
+    transition: all 0.2s;
+}
+.calendar-day.header {
+    font-weight: bold;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+.calendar-day.other-month {
+    color: var(--border-color);
+}
+.calendar-day.has-birthday {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.calendar-day.has-birthday:hover {
+    background-color: var(--brand-dark-orange);
+    transform: scale(1.1);
+}
+#vac-calendar-tooltip {
+    font-weight: 900;
+    font-size: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Легкая тень для объема */
+    letter-spacing: 0.5px;
+}
+/* --- Доска почета --- */
+.leaderboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: stretch; /* Растягиваем карточки на одну высоту */
+}
+
+.leader-card {
+    background: var(--card-bg);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px; /* Фиксируем минимальную высоту */
+}
+
+.leader-card:hover {
+    transform: translateY(-3px);
+}
+
+.leader-card h3 {
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.leader-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    flex-grow: 1; /* Список занимает всё свободное место */
+}
+
+.leader-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border-color);
+    font-size: 12px;
+}
+
+.leader-list li:last-child {
+    border-bottom: none;
+}
+
+.leader-list .emp-name {
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75%;
+}
+
+.leader-list .emp-value {
+    font-weight: bold;
+    color: var(--brand-orange);
+}
+/* --- Стили для карты и кастомного маркера --- */
+#map {
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+/* Убираем стандартную рамку у карты Leaflet, чтобы вписалась в наш дизайн */
+.leaflet-container {
+    background-color: var(--secondary-color);
+}
+
+/* Кастомный маркер: черная точка, золотое кольцо и черная окантовка */
+.custom-gold-marker {
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, #000 30%, #FFD700 40%, #B8860B 60%, #000 70%);
+    border: 2px solid #FFD700;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    transition: transform 0.2s;
+}
+.custom-gold-marker:hover {
+    transform: scale(1.2);
+}
+
+/* Стилизация всплывающего окна Leaflet (Popup) под наш дашборд */
+.leaflet-popup-content-wrapper {
+    background: var(--card-bg);
+    color: var(--text-main);
+    border-radius: 8px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+.leaflet-popup-tip {
+    background: var(--card-bg);
+}
+.leaflet-popup-content b {
+    font-size: 14px;
+    color: var(--brand-orange);
+}
+.leaflet-popup-content p {
+    margin: 5px 0 0 0;
+    font-size: 12px;
+}
+/* --- Стили для кастомной карты --- */
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 550px;
+    background-color: #000000; /* Черная подложка */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.amur-bg-img {
+    height: 95%;
+    max-width: 95%;
+    object-fit: contain;
+    opacity: 0.6; /* Делаем картинку полупрозрачной */
+    filter: grayscale(100%) contrast(150%) drop-shadow(0 0 5px var(--brand-orange)); /* Делаем её серой с оранжевой окантовкой */
+}
+
+/* Точка на карте */
+.map-point {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle, #000 30%, #FFD700 50%, #FF8C00 70%, #000 100%);
+    border: 2px solid #FFD700;
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(255, 140, 0, 1);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 10;
+}
+
+.map-point:hover {
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 1);
+    z-index: 20;
+}
+
+/* --- Стили для всплывающего окна карты --- */
+.city-tooltip {
+    position: fixed; 
+    background: var(--card-bg);
+    border: 1px solid var(--brand-orange);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    display: none; 
+    white-space: normal;
+    width: 340px;
+    max-height: 450px;
+    overflow-y: auto;
+    z-index: 99999; 
+    
+    /* КРИТИЧНО: обнуляем все отступы, чтобы JS сам всё расставил */
+    top: auto;
+    left: auto;
+    bottom: auto;
+    right: auto;
+}
+
+/* И убедись, что эти стили для стрелочек на месте */
+.city-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: var(--card-bg);
+    border-right: 1px solid var(--brand-orange);
+    border-bottom: 1px solid var(--brand-orange);
+}
+
+.city-tooltip.tooltip-down::after {
+    bottom: auto;
+    top: -7px;
+    transform: translateX(-50%) rotate(-135deg);
+}
+
+/* --- Внутреннее наполнение --- */
+.city-title {
+    color: var(--brand-orange);
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.city-loc {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--secondary-color);
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.org-block {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.org-block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.org-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.org-address {
+    font-size: 11px;
+    color: var(--brand-orange);
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.org-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.weather-info {
+    display: none; 
+    margin-top: 15px; 
+    font-size: 13px; 
+    color: var(--text-main); 
+    background: var(--secondary-color);
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Модификатор для тултипа, который открывается ВНИЗ */
+.city-tooltip.tooltip-down {
+    bottom: auto; /* Отменяем привязку к низу */
+    top: 25px;    /* Привязываем к верху точки */
+}
+
+/* Стрелочка вверх (когда тултип снизу) */
+.city-tooltip.tooltip-down::after {
+    bottom: auto;
+    top: -7px;
+    transform: translateX(-50%) rotate(-135deg);
+}
+/* --- Обновленный блок даты и времени в шапке --- */
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 12px; /* Чуть уменьшили */
+    color: var(--text-muted);
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Уменьшили зазор */
+    white-space: nowrap; /* Запрещаем перенос строк */
+}
+
+.info-row .label {
+    font-family: 'Arial Narrow', 'Segoe UI', sans-serif; /* Узкий шрифт */
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+.info-row strong {
+    color: var(--text-main);
+    font-weight: 600;
+    font-family: 'Consolas', 'Courier New', monospace; /* Моноширинный для цифр */
+}
+
+/* Делаем часы моноширинными, чтобы они не "прыгали" */
+#live-clock {
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: var(--brand-orange) !important; /* Выделяем время фирменным цветом */
+    letter-spacing: 0.5px;
+}
+
+body.dark-theme #live-clock {
+    color: var(--brand-yellow) !important; /* В темной теме делаем время желтым для контраста */
+}
+
+body.dark-theme .info-row strong {
+    color: #ffffff;
+}
+/* --- Панель руководителя --- */
+.manager-emp-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: var(--secondary-color);
+    overflow: hidden;
+}
+
+.manager-emp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.manager-emp-header:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.manager-emp-name {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--text-main);
+    flex: 2;
+}
+
+.manager-emp-stats {
+    display: flex;
+    gap: 15px;
+    flex: 3;
+    font-size: 13px;
+    text-align: center;
+}
+
+.manager-emp-stats span {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-muted);
+}
+
+.manager-emp-stats strong {
+    font-size: 14px;
+}
+
+.manager-emp-stats .stat-total strong { color: var(--text-main); }
+.manager-emp-stats .stat-intime strong { color: #2E7D32; }
+.manager-emp-stats .stat-late strong { color: #D32F2F; }
+.manager-emp-stats .stat-work strong { color: #0288D1; }
+
+.manager-emp-toggle {
+    font-size: 20px;
+    color: var(--brand-orange);
+    transition: transform 0.3s;
+}
+
+.manager-emp-card.open .manager-emp-toggle {
+    transform: rotate(180deg);
+}
+
+.manager-emp-details {
+    display: none;
+    padding: 15px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+.manager-emp-card.open .manager-emp-details {
+    display: block;
+}
+
+/* Вложенная таблица задач */
+.manager-task-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.manager-task-table th, .manager-task-table td {
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.manager-task-table th {
+    font-weight: bold;
+    color: var(--text-muted);
+    background: var(--secondary-color);
+}
+
+.manager-task-table .delay-col {
+    color: #D32F2F;
+    font-weight: bold;
+    text-align: right;
+}
+/* --- Календарь отпусков --- */
+.vac-day {
+    padding: 4px 2px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--text-main);
+    position: relative;
+    transition: background 0.2s;
+    min-height: 65px; /* Увеличиваем высоту ячейки, чтобы влезали аватарки */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid transparent;
+}
+/* Контейнер для аватарок внутри дня */
+.vac-avatars-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
+    margin-top: 4px;
+    width: 100%;
+}
+
+/* Мини-аватарка */
+.vac-mini-avatar {
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    cursor: help;
+}
+
+/* Если день с отпуском, убираем синюю заливку фона, оставляем рамку */
+.vac-day.has-vacation {
+    background-color: rgba(2, 136, 209, 0.05); /* Очень легкий фон */
+    border: 1px solid #0288D1;
+}
+.vac-day.has-vacation:hover {
+    background-color: rgba(2, 136, 209, 0.15);
+}
+.vac-day.header {
+    font-weight: bold;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+.vac-day.other-month { color: var(--border-color); }
+
+/* День с отпуском */
+.vac-day.has-vacation {
+    background-color: rgba(2, 136, 209, 0.2);
+    border: 1px solid #0288D1;
+    cursor: pointer;
+    font-weight: bold;
+}
+.vac-day.has-vacation:hover {
+    background-color: rgba(2, 136, 209, 0.4);
+}
+
+/* Текущий день */
+.vac-day.is-today {
+    border: 2px solid var(--brand-orange) !important;
+    box-shadow: 0 0 8px rgba(229, 107, 31, 0.5);
+}
+/* ==========================================
+   ПРЕЛОАДЕР (ЗАСТАВКА ЗАГРУЗКИ)
+   ========================================== */
+#preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10, 10, 10, 0.95); /* Более темный фон для контраста */
+    backdrop-filter: blur(10px);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.preloader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.4s ease-in;
+}
+
+/* Выравниваем логотип и счетчик по центру */
+.logo-row {
+    display: flex;
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Контейнер для логотипа (увеличен) */
+.logo-container {
+    width: 450px; /* Сделали значительно крупнее */
+    position: relative;
+}
+
+.logo-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Анимация заливки логотипа снизу вверх (3.5 секунды) */
+#preloader-logo {
+    animation: fillUp 3.5s ease-in-out forwards;
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+}
+
+@keyframes fillUp {
+    0% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+    100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* Счетчик с переливающимся градиентом */
+.preloader-counter {
+    font-size: 56px; /* Увеличили шрифт */
+    font-weight: 900;
+    font-family: 'Consolas', monospace;
+    min-width: 130px;
+    
+    /* Применяем градиент к тексту */
+    background: linear-gradient(135deg, var(--brand-yellow) 0%, var(--brand-orange) 50%, var(--brand-dark-orange) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Легкая тень для объема (так как текст прозрачный) */
+    filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6));
+}
+
+/* Новая надпись снизу (Градиентная и светящаяся) */
+.preloader-text {
+    margin-top: 25px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px; /* Сделали чуть крупнее */
+    font-weight: 700;
+    letter-spacing: 6px; /* Увеличили разрядку для солидности */
+    text-transform: uppercase;
+    
+    /* Делаем текст градиентным, как и счетчик */
+    background: linear-gradient(90deg, var(--brand-yellow) 0%, var(--brand-orange) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    opacity: 0;
+    transform: translateY(15px);
+    
+    /* Появление начинается на 2.8 секунде */
+    animation: textReveal 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.8s forwards;
+}
+
+@keyframes textReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        /* Добавляем свечение через drop-shadow, так как текст прозрачный */
+        filter: drop-shadow(0 0 10px rgba(229, 107, 31, 0.9)) 
+                drop-shadow(0 0 20px rgba(253, 183, 29, 0.5));
+    }
+}
+
+#preloader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* ==========================================
+   ДОРОЖНАЯ КАРТА (ТАЙМЛАЙН)
+   ========================================== */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+    margin-left: 10px;
+}
+
+/* Вертикальная линия */
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 6px;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+/* Точка на линии */
+.timeline-dot {
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border-color);
+    border: 2px solid var(--card-bg);
+    z-index: 2;
+}
+
+/* Статусы точек */
+.timeline-item.current .timeline-dot {
+    background: #2ECC71; /* Зеленый для текущей */
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+}
+.timeline-item.development .timeline-dot {
+    background: var(--brand-orange); /* Оранжевый для разработки */
+    box-shadow: 0 0 8px rgba(229, 107, 31, 0.5);
+}
+
+/* Карточка версии */
+.timeline-content {
+    background: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px 20px;
+}
+
+.timeline-item.current .timeline-content {
+    border-left: 4px solid #2ECC71;
+}
+
+.timeline-item.development .timeline-content {
+    border-left: 4px solid var(--brand-orange);
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.timeline-version {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+.timeline-status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.timeline-item.current .timeline-status {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ECC71;
+}
+
+.timeline-item.development .timeline-status {
+    background: rgba(229, 107, 31, 0.2);
+    color: var(--brand-orange);
+}
+
+.timeline-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.timeline-features li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 6px;
+}
+
+.timeline-features li::before {
+    content: '✅';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 12px;
+}
+
+/* Скрытый список (для будущих версий) */
+.timeline-item.development .timeline-features li::before,
+.timeline-item.future .timeline-features li::before {
+    content: '🔒';
+}
+
+.timeline-item.future {
+    opacity: 0.6;
+    filter: grayscale(100%);
+}
+/* ==========================================
+   ПЕРЕКЛЮЧАТЕЛЬ ГРАФИКОВ (TOGGLE SWITCH)
+   ========================================== */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input { 
+    opacity: 0; 
+    width: 0; 
+    height: 0; 
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #F1C40F; /* Желтый (цвет 1С) */
+    transition: .4s;
+    border-radius: 26px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px; 
+    width: 18px;
+    left: 4px; 
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+input:checked + .slider {
+    background-color: var(--brand-orange); /* Оранжевый (цвет СЭД) */
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+#scroll-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--brand-orange);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    pointer-events: auto !important; /* Разрешаем клики */
+    
+    /* По умолчанию скрыта, но занимает место в DOM */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    
+    z-index: 9999; /* Ставим выше всех, кроме модалок */
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Класс, который добавляет JS при прокрутке */
+#scroll-to-top-btn.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+    pointer-events: auto !important;
+}
+
+#scroll-to-top-btn:hover {
+    background-color: var(--brand-dark-orange);
+    transform: translateY(-5px) !important;
+    box-shadow: 0 6px 20px rgba(229, 107, 31, 0.5);
+}
+
+/* Прячем кнопку, если открыта модалка */
+body.modal-open #scroll-to-top-btn {
+    display: none !important;
+}
+/* ==========================================
+   ГОРЯЧИЕ КЛАВИШИ (kbd)
+   ========================================== */
+kbd {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'Consolas', monospace;
+    font-weight: bold;
+    font-size: 13px;
+    color: var(--brand-orange);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+/* ==========================================
+   РЕЖИМ ПРЕЗЕНТАЦИИ
+   ========================================== */
+body.presentation-mode {
+    background-color: #0a0a0a !important;
+    /* Включаем прилипание слайдов */
+    scroll-snap-type: y proximity;
+    overflow-y: scroll;
+    overflow-x: hidden !important;
+    scroll-behavior: smooth;
+}
+
+/* Каждая секция становится отдельным слайдом */
+body.presentation-mode section,
+body.presentation-mode .kpi-container,
+body.presentation-mode .leaderboard-section,
+body.presentation-mode #yearly-banner,
+body.presentation-mode #yearly-sed-banner,
+body.presentation-mode #yearly-soglas-banner {
+    scroll-snap-align: start;
+    scroll-margin-top: 20px;
+    margin-bottom: 80px !important; /* Больше воздуха между слайдами */
+}
+
+/* Увеличиваем графики в презентации */
+body.presentation-mode #dynamics-section div[style*="height: 300px"],
+body.presentation-mode #heatmap-section div[style*="height: 250px"],
+body.presentation-mode #details-panel div[style*="height: 450px"],
+body.presentation-mode #sed-analytics-section div[style*="height: 250px"],
+body.presentation-mode #details-soglas-panel div[style*="height: 350px"] {
+    height: 500px !important;
+}
+
+/* Увеличиваем шрифты в KPI для презентации */
+body.presentation-mode .kpi-value {
+    font-size: 56px !important;
+}
+body.presentation-mode h3 {
+    font-size: 20px !important;
+}
+
+/* Скрываем все лишнее */
+body.presentation-mode .dashboard-header,
+body.presentation-mode .toolbar,
+body.presentation-mode .filter-panel,
+body.presentation-mode #dev-tools,
+body.presentation-mode .employees-section,
+body.presentation-mode .dashboard-footer,
+body.presentation-mode #scroll-to-top-btn {
+    display: none !important;
+}
+
+/* Центрируем и ограничиваем ширину контента */
+body.presentation-mode .kpi-container,
+body.presentation-mode .charts-section,
+body.presentation-mode #dynamics-section,
+body.presentation-mode #heatmap-section,
+body.presentation-mode #details-panel,
+body.presentation-mode #sed-analytics-section,
+body.presentation-mode .leaderboard-section {
+    max-width: 1600px; /* Ограничиваем, чтобы не растягивалось на ультрашироких экранах */
+    margin: 0 auto 40px auto;
+    padding: 0 20px;
+}
+
+/* Стилизация карточек и графиков (Неон) */
+body.presentation-mode .kpi-card,
+body.presentation-mode .card-container,
+body.presentation-mode .leader-card,
+body.presentation-mode #details-panel,
+body.presentation-mode #sed-analytics-section > div {
+    background-color: #151515 !important; /* Темный фон карточек */
+    border: 1px solid var(--brand-orange) !important;
+    box-shadow: 0 0 15px rgba(229, 107, 31, 0.3) !important; /* Неоновое свечение */
+    transform: scale(1.02); /* Легкое увеличение для акцента */
+    transition: all 0.3s ease;
+}
+/* Выстраиваем тепловые карты в колонку */
+body.presentation-mode .heatmap-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Отключаем прилипание у всей секции */
+body.presentation-mode #heatmap-section {
+    scroll-snap-align: none !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important; 
+    width: 100vw !important;
+    max-width: 100vw !important;
+}
+
+/* Карточка-слайд */
+body.presentation-mode .heatmap-grid > .card-container {
+    height: 55vh !important; 
+    /* Делаем ширину 94%, чтобы справа осталось место под ползунок прокрутки */
+    width: 94% !important; 
+    margin: 0 auto !important; 
+    box-sizing: border-box !important; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    scroll-snap-align: center !important; 
+    /* ВОЗВРАЩАЕМ БОКОВЫЕ ОТСТУПЫ, чтобы холст не прилипал к неону */
+    padding: 15px 25px !important; 
+}
+
+/* Контейнер для холста графика */
+body.presentation-mode .heatmap-grid > .card-container > div {
+    height: 40vh !important; 
+    width: 100% !important; 
+    position: relative !important;
+}
+
+/* Заголовки графиков */
+body.presentation-mode .heatmap-grid h3 {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+}
+
+/* Увеличиваем шрифты в KPI */
+body.presentation-mode .kpi-value {
+    font-size: 42px !important;
+}
+
+/* Заголовки графиков */
+body.presentation-mode h3 {
+    font-size: 18px !important;
+}
+
+/* Кнопка выхода */
+#exit-presentation-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s;
+}
+
+#exit-presentation-btn:hover {
+    background: var(--brand-orange);
+    border-color: var(--brand-orange);
+}
+/* ==========================================
+   ОБНОВЛЕННАЯ КАРТОЧКА СОТРУДНИКА (СТРЕЛКИ ПО БОКАМ)
+   ========================================== */
+.modal-header-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    text-align: center;
+}
+
+.avatar-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--brand-orange);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* ==========================================
+   ОБНОВЛЕННАЯ КАРТОЧКА СОТРУДНИКА (ФИНАЛ)
+   ========================================== */
+
+/* Предотвращаем появление ползунков на фоне */
+.modal {
+    overflow: hidden; 
+}
+
+/* Контейнер, который держит карточку и стрелки вместе */
+.modal-relative-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Стрелки: позиционируются ровно относительно этого контейнера */
+.nav-arrow-side {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: var(--brand-orange);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 100;
+    transition: all 0.2s ease;
+}
+
+.nav-arrow-side:hover {
+    background: var(--brand-dark-orange);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Выдвигаем ровно наполовину (25px) */
+#modal-prev-emp { left: -25px; }
+#modal-next-emp { right: -25px; }
+
+/* Панель фильтров */
+.modal-filters-panel {
+    background: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.m-filter-buttons, .m-filter-dates {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Жесткая стилизация кнопок фильтра (убираем эффект браузера) */
+.m-filter-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg) !important;
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--text-main) !important;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.2s;
+    appearance: none; /* Отключает стандартный вид браузера */
+    -webkit-appearance: none;
+}
+
+.m-filter-btn:hover {
+    background: var(--border-color) !important;
+}
+
+.m-filter-btn.active {
+    background: var(--brand-orange) !important;
+    color: white !important;
+    border-color: var(--brand-orange) !important;
+    font-weight: bold;
+}
+
+.modal-date-input {
+    padding: 6px 10px;
+    font-size: 13px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--card-bg);
+    color: var(--text-main);
+    font-family: inherit;
+    outline: none;
+}
+
+.modal-date-input:focus {
+    border-color: var(--brand-orange);
+}
+
+@media (max-width: 1100px) {
+    /* На планшетах 1С становится широкой сверху, остальные 3 в ряд снизу */
+    .kpi-container { 
+        grid-template-columns: 1fr 1fr 1fr !important; 
+    }
+    .kpi-container .kpi-card:first-child { 
+        grid-column: span 3; 
+    }
+}
+
+@media (max-width: 768px) {
+    /* На телефонах карточки идут по 2 в ряд */
+    .kpi-container { 
+        grid-template-columns: 1fr 1fr !important; 
+    }
+    .kpi-container .kpi-card:first-child { 
+        grid-column: span 2; 
+    }
+}
+/* ==========================================
+   МАЛЕНЬКИЕ АВАТАРКИ В КАРТОЧКАХ НА ГЛАВНОЙ
+   ========================================== */
+.small-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: var(--brand-orange);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    flex-shrink: 0; /* Чтобы аватарка не сжималась при длинном ФИО */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+/* ==========================================
+   ИНДИКАТОРЫ СРАВНЕНИЯ ПЕРИОДОВ (ТРЕНДЫ)
+   ========================================== */
+.kpi-trend {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+}
+
+.trend-up {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ECC71;
+}
+
+.trend-down {
+    background: rgba(231, 76, 60, 0.15);
+    color: #E74C3C;
+}
+
+.trend-neutral {
+    background: rgba(149, 165, 166, 0.15);
+    color: #95A5A6;
+}
+/* Запрещаем холстам тепловых карт вылезать за пределы контейнера */
+#heatmap-section canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+/* Стили для прошлых (архивных) версий в Roadmap */
+.timeline-item.past .timeline-dot {
+    background: #7F8C8D;
+    box-shadow: none;
+}
+.timeline-item.past .timeline-content {
+    border-left: 4px solid #7F8C8D;
+    opacity: 0.7;
+}
+.timeline-item.past .timeline-status {
+    background: rgba(127, 140, 141, 0.2);
+    color: #7F8C8D;
+}
+/* Стили для вкладок панели руководителя */
+.manager-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.manager-tab-btn {
+    padding: 8px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.manager-tab-btn:hover {
+    background: rgba(229, 107, 31, 0.1);
+    color: var(--brand-orange);
+}
+
+.manager-tab-btn.active {
+    background: var(--brand-orange);
+    color: white;
+}
+
+.manager-tab-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+/* Таблица авторов СЭД */
+.authors-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.authors-table th, .authors-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+.authors-table th {
+    color: var(--text-muted);
+    font-weight: bold;
+    background: var(--secondary-color);
+}
+.authors-table tr:hover {
+    background: rgba(0,0,0,0.02);
+}
+body.dark-theme .authors-table tr:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+/* Прогресс-бар для процента */
+.pct-bar-container {
+    width: 100%;
+    background: var(--border-color);
+    border-radius: 10px;
+    height: 8px;
+    margin-top: 4px;
+    overflow: hidden;
+}
+.pct-bar-fill {
+    height: 100%;
+    background: var(--brand-orange);
+    border-radius: 10px;
+}
+.badge-danger {
+    background: rgba(211, 47, 47, 0.15);
+    color: #D32F2F;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 12px;
+}
+/* Сетка нового единого календаря */
+.unified-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+}
+
+.uc-day {
+    min-height: 75px;
+    padding: 4px;
+    border-radius: 6px;
+    background: var(--card-bg);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+/* Подсветка сегодняшнего дня в едином календаре */
+.uc-day.uc-today {
+    outline: 3px solid var(--brand-orange) !important;
+    outline-offset: -3px; /* Рамка рисуется внутри ячейки */
+    font-weight: 900 !important;
+    background-color: rgba(229, 107, 31, 0.15) !important;
+    color: var(--brand-orange) !important;
+}
+/* Если сегодняшний день еще и праздник - делаем текст контрастным */
+.uc-day.uc-today.is-holiday {
+    color: #D32F2F !important;
+}
+
+.uc-day.header {
+    background: transparent;
+    border: none;
+    min-height: auto;
+    font-weight: bold;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    padding-bottom: 10px;
+}
+
+.uc-day.other-month {
+    opacity: 0.3;
+    background: transparent;
+    border-color: transparent;
+}
+
+/* Выходные и праздники */
+.uc-day.is-holiday {
+    background: rgba(211, 47, 47, 0.1);
+    border-color: rgba(211, 47, 47, 0.3);
+    color: #D32F2F;
+}
+
+/* День металлурга */
+.uc-day.is-metalurg {
+    background: rgba(229, 107, 31, 0.15);
+    border: 2px solid var(--brand-orange);
+}
+
+/* Иконка дня рождения */
+.uc-bday-icon {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 12px;
+}
+
+/* Аватарки в сетке */
+.uc-avatars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
+    margin-top: auto;
+    width: 100%;
+}
+
+.uc-avatar {
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+/* Голубая подсветка для дней с отпусками */
+.uc-day.has-vacation {
+    background-color: rgba(52, 152, 219, 0.15) !important; /* Голубой фон */
+    border-color: #3498DB !important;
+}
+
+/* Обычные выходные (сб, вс) */
+.uc-day.is-weekend {
+    background: rgba(211, 47, 47, 0.05);
+    color: #D32F2F;
+}
+
+/* Праздники (сделаем фон чуть плотнее) */
+.uc-day.is-holiday {
+    background: rgba(211, 47, 47, 0.15) !important;
+    border-color: rgba(211, 47, 47, 0.4) !important;
+    color: #D32F2F;
+    font-weight: bold;
+}
+/* --- Виджет погоды --- */
+.weather-row {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+.weather-row:hover {
+    color: var(--brand-orange);
+}
+
+/* Всплывающая карточка */
+.weather-popup {
+    position: absolute;
+    top: 100px; /* Отступ от шапки */
+    right: 30px;
+    width: 320px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 15px;
+    z-index: 900; /* Ниже модалок, но выше контента */
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none; /* Чтобы не мешала, когда скрыта */
+}
+
+.weather-popup.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.weather-popup-header h4 {
+    margin: 0 0 10px 0;
+    color: var(--brand-orange);
+    font-size: 15px;
+}
+
+/* Детали на сегодня */
+.weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    background: var(--secondary-color);
+    padding: 10px;
+    border-radius: 8px;
+}
+.wd-item {
+    display: flex;
+    flex-direction: column;
+}
+.wd-item span {
+    color: var(--text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.wd-item b {
+    color: var(--text-main);
+}
+
+/* Прогноз на неделю */
+.weather-forecast-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+}
+
+.weather-forecast-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.wf-day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    background: var(--secondary-color);
+}
+.wf-date { flex: 1; font-weight: bold; }
+.wf-icon { font-size: 16px; width: 30px; text-align: center; }
+.wf-temp { width: 60px; text-align: right; }
+.wf-temp span { color: var(--text-muted); font-size: 10px; }
+/* --- Окно помощи --- */
+.help-tab-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.glossary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.glossary-item {
+    background: var(--secondary-color);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--brand-orange);
+    display: flex;
+    flex-direction: column;
+}
+
+.glossary-item b {
+    color: var(--brand-orange);
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.glossary-item span {
+    font-size: 12px;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+/* Кнопки вкладок (наследуем от панели руководителя, но чуть корректируем) */
+.help-tab-btn {
+    padding: 8px 15px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-weight: bold;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+.help-tab-btn:hover {
+    background: rgba(229, 107, 31, 0.1);
+}
+.help-tab-btn.active {
+    background: var(--brand-orange);
+    color: white;
+}
+
+/* Стили для интерактивного тура (пока скрыты) */
+.tour-highlight {
+    position: relative !important;
+    z-index: 100000 !important;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.75) !important;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.tour-tooltip {
+    position: absolute;
+    z-index: 100001;
+    background: var(--card-bg);
+    border: 2px solid var(--brand-orange);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 300px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tour-tooltip h4 {
+    margin: 0;
+    color: var(--brand-orange);
+    font-size: 16px;
+}
+.tour-tooltip p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+.tour-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+.tour-btn {
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+}
+.tour-btn-next {
+    background: var(--brand-orange);
+    color: white;
+}
+.tour-btn-prev {
+    background: var(--secondary-color);
+    color: var(--text-main);
+}
+.tour-btn-skip {
+    background: transparent;
+    color: var(--text-muted);
+}
+/* Слой для тура */
+.tour-highlight {
+    position: relative !important;
+    z-index: 100005 !important;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.75) !important;
+    border-radius: 8px;
+    pointer-events: none; /* Чтобы клики не срабатывали во время обучения */
+    transition: all 0.3s ease;
+}
+
+/* Карточка тура */
+.tour-tooltip {
+    position: absolute;
+    z-index: 100010;
+    background: var(--card-bg);
+    border: 2px solid var(--brand-orange);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 320px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tour-tooltip h4 {
+    margin: 0;
+    color: var(--brand-orange);
+    font-size: 16px;
+}
+
+.tour-tooltip p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.tour-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+}
+
+.tour-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    transition: all 0.2s;
+}
+
+.tour-btn-next {
+    background: var(--brand-orange);
+    color: white;
+}
+.tour-btn-next:hover {
+    background: var(--brand-dark-orange);
+}
+
+.tour-btn-prev {
+    background: var(--secondary-color);
+    color: var(--text-main);
+}
+
+.tour-btn-skip {
+    background: transparent;
+    color: var(--text-muted);
+    text-decoration: underline;
+}
+/* Всплывающее уведомление о теме */
+.theme-toast {
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    background: var(--card-bg);
+    border-left: 4px solid var(--brand-orange);
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 999999;
+    font-size: 13px;
+    color: var(--text-main);
+    max-width: 300px;
+    transform: translateX(120%);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.theme-toast.show {
+    transform: translateX(0);
+}
+/* Стили для кнопки ассистента */
+#open-ai-assistant-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(52,152,219,0.5);
+}
+
+/* Мигающий курсор для печатной машинки */
+.type-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background-color: #3498DB;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Красивое выделение текста в ассистенте */
+.ai-highlight {
+    color: #F1C40F;
+    font-weight: bold;
+}
+.ai-danger {
+    color: #E74C3C;
+    font-weight: bold;
+}
+.ai-success {
+    color: #2ECC71;
+    font-weight: bold;
+}
+/* Стили для Глобального ИИ-чата */
+.ai-message {
+    display: flex;
+    gap: 10px;
+    max-width: 85%;
+    animation: fadeIn 0.3s ease;
+}
+
+.ai-message.ai-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.ai-message.ai-bot {
+    align-self: flex-start;
+}
+
+.ai-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.ai-text {
+    background: var(--secondary-color);
+    padding: 12px 15px;
+    border-radius: 15px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-main);
+}
+
+.ai-message.ai-user .ai-text {
+    background: #3498DB;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+.ai-message.ai-bot .ai-text {
+    border-bottom-left-radius: 2px;
+}
+
+.ai-quick-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.ai-quick-btn:hover {
+    background: #3498DB;
+    color: white;
+    border-color: #3498DB;
+}
+/* --- Схема этажа (Неоновый чертеж) --- */
+#floorplan-modal .modal-content {
+    background: #0a0a0a !important; /* Черный фон */
+    border: 1px solid var(--brand-orange);
+    box-shadow: 0 0 20px rgba(229, 107, 31, 0.2);
+}
+
+/* --- Схема этажа (Неоновый чертеж) --- */
+.floorplan-wrapper {
+    display: flex;
+    align-items: flex-end;
+    background: #0a0a0a;
+    border: 2px solid var(--brand-orange);
+    border-radius: 4px;
+    height: 400px; 
+    min-width: 1200px;
+    position: relative;
+    margin-top: 20px;
+    padding-top: 35px;
+    box-shadow: inset 0 0 15px rgba(229, 107, 31, 0.1);
+}
+
+/* Лестницы как обычные элементы в ряду кабинетов */
+.fp-stair {
+    border-right: 2px solid var(--brand-orange);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(229, 107, 31, 0.1),
+        rgba(229, 107, 31, 0.1) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--brand-orange);
+    font-size: 10px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    height: 100%;
+    position: relative;
+}
+
+/* Спец. стена для 211 кабинета (Т-образная) */
+.fp-room-211::before {
+    content: '';
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--brand-orange);
+    z-index: 1;
+}
+.fp-room-211::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 50%;
+    background: var(--brand-orange);
+    z-index: 1;
+}
+
+/* Коридор */
+.floorplan-corridor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 35px;
+    background: rgba(229, 107, 31, 0.1);
+    border-bottom: 2px solid var(--brand-orange);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 12px;
+    color: var(--brand-orange);
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Лестницы */
+.stair-left, .stair-right {
+    position: absolute;
+    top: 35px;
+    bottom: 0;
+    width: 40px;
+    border-right: 2px solid var(--brand-orange);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(229, 107, 31, 0.1),
+        rgba(229, 107, 31, 0.1) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--brand-orange);
+    font-size: 10px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+.stair-left { left: 0; }
+.stair-right { right: 0; border-right: none; border-left: 2px solid var(--brand-orange); }
+
+/* Кабинет */
+.fp-room {
+    border-right: 2px solid var(--brand-orange);
+    position: relative;
+    background: transparent;
+    height: 100%;
+    transition: background 0.3s;
+}
+
+.fp-room:hover {
+    background: rgba(229, 107, 31, 0.05);
+}
+
+/* Номер кабинета */
+.fp-room-label {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--brand-orange);
+    opacity: 0.8;
+}
+
+/* Дверные проемы (белые промежутки на оранжевых линиях) */
+.door-gap {
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    height: 4px;
+    background: #0a0a0a; /* Перекрываем линию */
+    border-top: 2px solid #0a0a0a;
+}
+.door-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+.door-top { top: 0; left: 50%; transform: translateX(-50%); }
+
+/* Рабочее место */
+.fp-desk {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    cursor: default;
+    transition: transform 0.2s;
+}
+
+.fp-desk.empty {
+    border: 1px solid rgba(229, 107, 31, 0.5);
+    background: rgba(0,0,0,0.5);
+    color: rgba(229, 107, 31, 0.5);
+    font-size: 9px;
+}
+
+.fp-desk.occupied {
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: help;
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.fp-desk.occupied:hover {
+    transform: translate(-50%, -50%) scale(1.3);
+    z-index: 20;
+    box-shadow: 0 0 10px #fff;
+}
+
+/* Тултип для стола */
+.fp-desk .desk-tooltip {
+    visibility: hidden;
+    width: 200px;
+    background: #111;
+    color: #fff;
+    border: 1px solid var(--brand-orange);
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 150%; 
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 0 15px rgba(229, 107, 31, 0.5);
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.fp-desk:hover .desk-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+/* Блок рекомендаций в ИИ-Ассистенте */
+.ai-insight-box {
+    background: rgba(241, 196, 15, 0.1);
+    border-left: 4px solid #F1C40F;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-size: 12.5px;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+.ai-insight-box b {
+    color: #D4AC0D;
+}
+/* --- Steam Стиль Достижений --- */
+#achievements-modal .modal-content {
+    /* Имитация фона Steam */
+    background: radial-gradient(circle at top, #1b2838 0%, #171a21 100%) !important; 
+}
+
+/* Верхняя сетка иконок */
+.steam-icons-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.steam-icon-box {
+    width: 64px;
+    height: 64px;
+    background: #202d39;
+    border: 1px solid #2a3f5a;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    cursor: help;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.steam-icon-box:hover {
+    transform: scale(1.1);
+    border-color: #66c0f4;
+    z-index: 10;
+}
+
+.steam-icon-box.locked {
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+/* Тултип для верхних иконок */
+.steam-icon-box .ach-tooltip {
+    visibility: hidden;
+    width: 250px;
+    background: #c6d4df; /* Светлый тултип как в Steam */
+    color: #111;
+    text-align: left;
+    border-radius: 4px;
+    padding: 10px 15px;
+    position: absolute;
+    z-index: 100;
+    top: 120%; 
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.steam-icon-box:hover .ach-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.steam-icon-box .ach-tooltip b { color: #000; display: block; font-size: 14px; margin-bottom: 5px; }
+.steam-icon-box .ach-tooltip span.desc { display: block; color: #444; margin-bottom: 5px; }
+.steam-icon-box .ach-tooltip span.date { display: block; color: #2a3f5a; font-weight: bold; }
+
+/* Нижний список прогресса */
+.steam-progress-list {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Кастомный скроллбар для списка */
+.steam-progress-list::-webkit-scrollbar { width: 8px; }
+.steam-progress-list::-webkit-scrollbar-track { background: #171a21; border-radius: 4px; }
+.steam-progress-list::-webkit-scrollbar-thumb { background: #2a3f5a; border-radius: 4px; }
+
+.steam-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #202d39;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.steam-progress-row:hover {
+    border-color: #2a3f5a;
+}
+
+.steam-row-icon {
+    font-size: 24px;
+    width: 40px;
+    text-align: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.steam-row-content {
+    flex: 1;
+}
+
+.steam-row-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #c6d4df;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.steam-row-title .tier-name {
+    color: #F1C40F;
+    font-size: 11px;
+}
+
+.steam-row-bar {
+    width: 100%;
+    height: 6px;
+    background: #171a21;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.steam-row-fill {
+    height: 100%;
+    background: var(--brand-orange); /* Наш фирменный оранжевый */
+    border-radius: 3px;
+    width: 0%;
+}
+
+.steam-row-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #8f98a0;
+}
+/* ==========================================
+   ЗАЛ НАГРАД (ТАБЫ И ФИКСАЦИЯ РАЗМЕРА)
+   ========================================== */
+#achievements-modal .modal-content {
+    height: 85vh; /* Фиксируем высоту окна */
+    display: flex;
+    flex-direction: column;
+}
+
+.ach-tab-btn {
+    padding: 8px 15px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #8f98a0;
+    font-weight: bold;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.ach-tab-btn:hover {
+    background: rgba(102, 192, 244, 0.1);
+    color: #66c0f4;
+}
+
+.ach-tab-btn.active {
+    background: #66c0f4;
+    color: #171a21;
+}
+
+.ach-tab-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Стилизация скроллбара для контента */
+.ach-tab-content::-webkit-scrollbar { width: 8px; }
+.ach-tab-content::-webkit-scrollbar-track { background: #171a21; border-radius: 4px; }
+.ach-tab-content::-webkit-scrollbar-thumb { background: #2a3f5a; border-radius: 4px; }
+
+/* Кнопки переключения периодов (Неделя/Месяц/Год) */
+.ach-period-btn {
+    padding: 4px 10px;
+    border-radius: 15px;
+    border: 1px solid #2a3f5a;
+    background: transparent;
+    color: #c6d4df;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.ach-period-btn.active {
+    background: #2a3f5a;
+    color: #fff;
+    border-color: #66c0f4;
+}
