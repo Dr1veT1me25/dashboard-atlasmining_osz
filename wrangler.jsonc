@@ -1,0 +1,17 @@
+{
+  "name": "atlas-dashboard-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-10",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "atlas_dtz_db",
+      "database_id": "826d24cc-b95b-4715-8f7b-993fde8905bb"
+    }
+  ]
+}
