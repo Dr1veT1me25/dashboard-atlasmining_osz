@@ -5,7 +5,9 @@ let allLoadedData1C = [];
 let allLoadedDataSED = []; 
 let currentFiltered1C = []; 
 let currentFilteredSED = []; 
-let currentGlobalPeriod = 'all'; 
+let currentGlobalPeriod = 'all';
+let globalCommentsData = {}; // Сюда будем складывать комментарии из базы
+const API_URL = 'https://dashboard-atlasmining-osz.dimon20022555.workers.dev/api/comments'; // Твой URL API 
 let prevStartDate = new Date(0);
 let prevEndDate = new Date(0);
 
@@ -2172,6 +2174,34 @@ document.addEventListener("DOMContentLoaded", function() {
                 window.bakedDiadokBlind = JSON.parse(LZString.decompressFromBase64(window.bakedDiadokBlind));
             }
     }
+        // --- ЗАГРУЗКА КОММЕНТАРИЕВ ИЗ БАЗЫ ---
+    async function loadComments() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error("Ошибка сети");
+            const data = await response.json();
+            
+            // Преобразуем массив в объект для быстрого поиска (ключ = номер заказа)
+            data.forEach(item => {
+                globalCommentsData[item.order_number] = {
+                    text: item.comment_text,
+                    color: item.color_marker
+                };
+            });
+            console.log("✅ Комментарии загружены:", Object.keys(globalCommentsData).length);
+            
+            // Если панель ДтЗ уже открыта, перерисуем таблицу
+            // (этот код сработает, если мы находимся на странице ДтЗ)
+            if (typeof currentEmpDtzRows !== 'undefined' && currentEmpDtzRows.length > 0) {
+                renderEmpDtzFilteredTable(); 
+            }
+        } catch (error) {
+            console.error("❌ Ошибка загрузки комментариев:", error);
+        }
+    }
+    
+    // Вызываем загрузку при старте сайта
+    loadComments();
 });
 
 // ==========================================
@@ -7600,21 +7630,78 @@ document.addEventListener("DOMContentLoaded", function() {
                             deadline = `${parts[2]}.${parts[1]}.${parts[0]}`;
                         }
                         const comment = row[12] || '';
+                        const orderNum = row[9] || ''; // Номер заказа для привязки комментария
+                        
+                        // Берем комментарий из базы, если он там есть. Если нет — из Excel.
+                        let dbComment = globalCommentsData[orderNum] ? globalCommentsData[orderNum].text : comment;
+                        let rowColor = globalCommentsData[orderNum] ? globalCommentsData[orderNum].color : 'none';
+
+                        // Определяем цвет фона для строки (если есть маркер)
+                        let bgColor = 'transparent';
+                        if (rowColor === 'yellow') bgColor = 'rgba(241, 196, 15, 0.2)';
+                        else if (rowColor === 'green') bgColor = 'rgba(46, 204, 113, 0.2)';
+                        else if (rowColor === 'red') bgColor = 'rgba(231, 76, 60, 0.2)';
 
                         const tr = document.createElement('tr');
+                        tr.style.backgroundColor = bgColor;
                         tr.innerHTML = `
                             <td>${row[0] || '—'}</td>
                             <td style="font-weight: bold;">${row[1] || '—'}</td>
                             <td>${row[2] ? row[2].split(' ')[0] : '—'}</td>
-                            <td style="font-size: 11px; color: var(--text-muted);">${row[9] || '—'}</td>
+                            <td style="font-size: 11px; color: var(--text-muted);">${orderNum}</td>
                             <td style="text-align: center;">${deadline}</td>
                             <td style="text-align: right; font-weight: bold; color: #E74C3C;">${sum.toLocaleString('ru-RU')} ₽</td>
-                            <td style="font-size: 12px; color: var(--text-main); white-space: normal; line-height: 1.4;">${comment}</td>
+                            <td>
+                                <input type="text" class="dtz-comment-input" data-order="${orderNum}" value="${dbComment}" 
+                                       style="width: 100%; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--card-bg); color: var(--text-main);"
+                                       placeholder="Написать комментарий...">
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
                 }
             }
+                        // Добавляем обработчики на поля ввода комментариев
+            document.querySelectorAll('.dtz-comment-input').forEach(input => {
+                // Сохраняем по нажатию Enter
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        this.blur(); // Убираем фокус, что вызовет событие change
+                    }
+                });
+                
+                // Сохраняем при потере фокуса (клик в другое место)
+                input.addEventListener('change', async function() {
+                    const orderNum = this.getAttribute('data-order');
+                    const newText = this.value.trim();
+                    
+                    // Меняем цвет, чтобы показать, что идет сохранение
+                    this.style.borderColor = '#F1C40F'; 
+                    
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                order_number: orderNum,
+                                comment_text: newText,
+                                color_marker: globalCommentsData[orderNum]?.color || 'none' // Пока сохраняем без цвета
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.style.borderColor = '#2ECC71'; // Зеленый при успехе
+                            globalCommentsData[orderNum] = { text: newText, color: globalCommentsData[orderNum]?.color || 'none' };
+                            setTimeout(() => this.style.borderColor = 'var(--border-color)', 2000);
+                        } else {
+                            throw new Error("Ошибка сервера");
+                        }
+                    } catch (err) {
+                        console.error("Ошибка сохранения:", err);
+                        this.style.borderColor = '#E74C3C'; // Красный при ошибке
+                    }
+                });
+            });
                 } // Закрывается функция renderEmpDtzFilteredTable
 
         // 2. Закрытие окна
