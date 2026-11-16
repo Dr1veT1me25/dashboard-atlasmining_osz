@@ -7,7 +7,7 @@ let currentFiltered1C = [];
 let currentFilteredSED = []; 
 let currentGlobalPeriod = 'all';
 let globalCommentsData = {}; // Сюда будем складывать комментарии из базы
-const API_URL = 'https://dashboard-atlasmining-osz.dimon20022555.workers.dev/api/comments'; // Твой URL API 
+const API_URL = 'https://dashboardosz.ru/api/comments';
 let prevStartDate = new Date(0);
 let prevEndDate = new Date(0);
 
